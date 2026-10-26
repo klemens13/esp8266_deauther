@@ -13,6 +13,13 @@ GPS::GPS() {
 void GPS::begin(HardwareSerial& serial, uint32_t baudrate) {
     serial.begin(baudrate);
     _serial = &serial;
+    _stream = &serial;
+}
+
+void GPS::begin(Stream& stream) {
+    // Stream (e.g. SoftwareSerial) must already be begun by the caller.
+    _serial = nullptr;
+    _stream = &stream;
 }
 
 void GPS::write(uint8_t b) {
@@ -48,9 +55,9 @@ void GPS::write(const uint8_t* data, size_t len) {
 bool GPS::update() {
     bool hadFixBefore = pos.valid;
 
-    if (_serial) {
-        while (_serial->available() > 0) {
-            write((uint8_t)_serial->read());
+    if (_stream) {
+        while (_stream->available() > 0) {
+            write((uint8_t)_stream->read());
         }
     }
 

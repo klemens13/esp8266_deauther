@@ -22,6 +22,9 @@ class GPS {
         // Begin reading from a hardware serial port (e.g. Serial1).
         void begin(HardwareSerial& serial, uint32_t baudrate);
 
+        // Begin reading from any Stream (e.g. SoftwareSerial) that is already begun.
+        void begin(Stream& stream);
+
         // Call repeatedly from loop(). Returns true when a new valid position was parsed.
         bool update();
 
@@ -44,6 +47,7 @@ class GPS {
         static int    parseInt(const char* s);
 
         HardwareSerial* _serial = nullptr;
+        Stream*         _stream = nullptr;
         char   line[MAX_LINE_LEN];
         size_t lineLen = 0;
         GPSPosition pos;
